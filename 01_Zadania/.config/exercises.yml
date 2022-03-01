@@ -1,0 +1,14 @@
+exercises:
+    '01_Przygotowanie projektu': { max_points: 0, disabled: true, translations: { en: '1_Project preparation', pl: '01_Przygotowanie projektu' } }
+    '02_Szablon bazowy': { max_points: 0, disabled: true, translations: { en: '2_Base template', pl: '02_Szablon bazowy' } }
+    '03_Model sali': { max_points: 0, disabled: true, translations: { en: '3_Room model', pl: '03_Model sali' } }
+    '04_Widok dodawania sali': { max_points: 0, disabled: true, translations: { en: '4_Room adding view', pl: '04_Widok dodawania sali' } }
+    '05_Lista wszystkich sal': { max_points: 0, disabled: true, translations: { en: '5_List of all rooms', pl: '05_Lista wszystkich sal' } }
+    '06_Usuwanie sali': { max_points: 0, disabled: true, translations: { en: '6_Deleting a room', pl: '06_Usuwanie sali' } }
+    '07_Modyfikacja sali': { max_points: 0, disabled: true, translations: { en: '7_Room modification', pl: '07_Modyfikacja sali' } }
+    '08_Model rezerwacji': { max_points: 0, disabled: true, translations: { en: '8_Booking model', pl: '08_Model rezerwacji' } }
+    '09_Widok rezerwacji': { max_points: 0, disabled: true, translations: { en: '9_Booking view', pl: '09_Widok rezerwacji' } }
+    '10_Szczegółowy widok sali': { max_points: 0, disabled: true, translations: { en: '10_Detailed room view', pl: '10_Szczegółowy widok sali' } }
+    '11_Dostępność sali': { max_points: 0, disabled: true, translations: { en: '11_Room availability', pl: '11_Dostępność sali' } }
+    '12_Aktualizacja widoku rezerwacji': { max_points: 0, disabled: true, translations: { en: '12_Booking view update', pl: '12_Aktualizacja widoku rezerwacji' } }
+    '13_Wyszukiwanie sali - dla chętnych': { max_points: 0, disabled: true, translations: { en: '13_Room search - for volunteers', pl: '13_Wyszukiwanie sali - dla chętnych' } }
