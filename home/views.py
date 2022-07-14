@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
-from home.models import Room
+from home.models import Room, Bookings
+import datetime
 
 
 class AddRoom(View):
@@ -62,4 +63,23 @@ class ModifyRoom(View):
         room.is_projector = is_projector
         room.save()
 
+        return redirect('home:all_rooms')
+
+class BookRoom(View):
+    def get(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        return render(request, 'home/booking.html', {'room': room})
+
+    def post(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        room = room.id
+        date = request.POST.get("date")
+        comment = request.POST.get("comment")
+
+        if Bookings.objects.filter(room_id_id=room, booking_date=date):
+            return HttpResponse("This room is already booked for this date.")
+        if date < str(datetime.date.today()):
+            return HttpResponse("Please indicate future date for your reservation")
+
+        Bookings.objects.create(room_id_id=room, booking_date=date, commentary=comment)
         return redirect('home:all_rooms')
