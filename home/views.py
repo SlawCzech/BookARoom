@@ -18,7 +18,17 @@ class AddRoom(View):
         is_projector = request.POST.get("is_projector")
         if is_projector == 'on':
             is_projector = True
+        else:
+            is_projector = False
+        if Room.objects.filter(name=name):
+            return HttpResponse('This room is already in database')
+
 
         Room.objects.create(name=name, capacity=room_capacity, is_projector=is_projector)
         return render(request, 'home/add_room.html')
+
+class AllRooms(View):
+    def get(self, request):
+        rooms = Room.objects.all().values()
+        return render(request, 'home/all_rooms.html', {'rooms': rooms})
 
