@@ -83,3 +83,11 @@ class BookRoom(View):
 
         Bookings.objects.create(room_id_id=room, booking_date=date, commentary=comment)
         return redirect('home:all_rooms')
+
+class RoomDetails(View):
+    def get(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        reservations = Bookings.objects.filter(room_id_id=room_id).filter(booking_date__gte=str(datetime.date.today())).order_by('booking_date')
+        # reservations = room.bookings_set.filter(booking_date__gte=str(datetime.date.today())).order_by('booking_date')
+        return render(request, 'home/room_details.html', context={'room': room, 'reservations': reservations})
+

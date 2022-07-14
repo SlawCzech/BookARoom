@@ -11,4 +11,5 @@ urlpatterns = [
     path('home/room/del/<int:room_id>/', views.DeleteRoom.as_view(), name='del_room'),
     path('home/room/edit/<int:room_id>/', views.ModifyRoom.as_view(), name='edit_room'),
     path('home/room/mk_res/<int:room_id>/', views.BookRoom.as_view(), name='book_room'),
+    path('home/room/<int:room_id>/', views.RoomDetails.as_view(), name='room_details'),
 ]

@@ -6,7 +6,7 @@ class Room(models.Model):
     is_projector = models.BooleanField(default=False)
 
 class Bookings(models.Model):
-    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_id = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_id')
     booking_date = models.DateField(blank=True, null=True)
     commentary = models.TextField(null=True)
 

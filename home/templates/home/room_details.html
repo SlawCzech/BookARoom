@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+    <br>
+    <h3>Detailed view of {{ room.name }}:</h3>
+    <br>
+
+<div class="container-fluid">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr style="text-align: center">
+                    <th scope="col">Room name</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col">Availability</th>
+                    <th scope="col">Projector</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ room.name }}</td>
+                    <td style="text-align: center">{{ room.capacity }}</td>
+                    <td style="text-align: center">Unknown</td>
+                        {% if room.is_projector %}
+                    <td class="col-2" style="color:green; text-align: center">&#10004;</td>
+                        {% else %}
+                    <td class="col-2" style="color:red; text-align: center">&#10008;</td>
+                        {% endif %}
+                    <td><a href="room/edit/{{ room.id }}/">Edit</a></td>
+                    <td><a href="room/del/{{ room.id }}/">Delete</a></td>
+                    <td><a href="room/mk_res/{{ room.id }}/">Make reservation</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <h3>Reservations:</h3>
+    <br>
+
+    <div class="container-fluid">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr style="text-align: left">
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Commentary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in reservations %}
+                <tr style="text-align: left">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ res.booking_date }}</td>
+                    <td>{{ res.commentary }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
