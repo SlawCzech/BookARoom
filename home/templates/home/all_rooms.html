@@ -7,6 +7,7 @@
                 <tr style="text-align: center">
                     <th scope="col">#</th>
                     <th scope="col">Room name</th>
+                    <th scope="col">Details</th>
                     <th scope="col">Capacity</th>
                     <th scope="col">Availability</th>
                     <th scope="col">Projector</th>
@@ -20,8 +21,13 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ room.name }}</td>
+                    <td style="text-align: center"><a href="room/{{ room.id }}/">&#128065;</a></td>
                     <td style="text-align: center">{{ room.capacity }}</td>
-                    <td style="text-align: center">Unknown</td>
+                        {% if booked %}
+                    <td style="text-align: center">Booked</td>
+                        {% else %}
+                    <td style="text-align: center">Available</td>
+                        {% endif %}
                         {% if room.is_projector %}
                     <td class="col-2" style="color:green; text-align: center">&#10004;</td>
                         {% else %}

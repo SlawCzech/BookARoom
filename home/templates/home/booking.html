@@ -22,4 +22,18 @@
     </div>
 </form>
 
+    <br>
+    <br>
+    <h3>Reservations:</h3>
+    <br>
+    <ul class="list-group">
+      {% for reservation in reservations %}
+      <li class="list-group-item">
+        <h4>{{ reservation.booking_date }}</h4>
+        <p>{{ reservation.commentary }}</p>
+      </li>
+      {% endfor %}
+
+    </ul>
+
 {% endblock %}

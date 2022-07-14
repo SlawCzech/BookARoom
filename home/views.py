@@ -30,6 +30,11 @@ class AddRoom(View):
 class AllRooms(View):
     def get(self, request):
         rooms = Room.objects.all().values()
+        for room in rooms:
+            booked = False
+            reservations = Bookings.objects.filter(room_id_id=room['id'])
+            reservation_dates = [res.booking_date for res in reservations]
+            booked = datetime.date.today() in reservation_dates
         return render(request, 'home/all_rooms.html', {'rooms': rooms})
 
 class DeleteRoom(View):
@@ -68,13 +73,18 @@ class ModifyRoom(View):
 class BookRoom(View):
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
-        return render(request, 'home/booking.html', {'room': room})
+        reservations = Bookings.objects.filter(room_id_id=room_id).filter(
+            booking_date__gte=str(datetime.date.today())).order_by('booking_date')
+        return render(request, 'home/booking.html', {'room': room, 'reservations': reservations})
 
     def post(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         room = room.id
         date = request.POST.get("date")
         comment = request.POST.get("comment")
+
+        reservations = Bookings.objects.filter(room_id_id=room_id).filter(
+            booking_date__gte=str(datetime.date.today())).order_by('booking_date')
 
         if Bookings.objects.filter(room_id_id=room, booking_date=date):
             return HttpResponse("This room is already booked for this date.")
@@ -88,6 +98,5 @@ class RoomDetails(View):
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         reservations = Bookings.objects.filter(room_id_id=room_id).filter(booking_date__gte=str(datetime.date.today())).order_by('booking_date')
-        # reservations = room.bookings_set.filter(booking_date__gte=str(datetime.date.today())).order_by('booking_date')
         return render(request, 'home/room_details.html', context={'room': room, 'reservations': reservations})
 
