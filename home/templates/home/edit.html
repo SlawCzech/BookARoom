@@ -1,40 +1,56 @@
 {% extends 'base.html' %}
 
 {% block container %}
-<div class="container-fluid">
+
+    <br>
+    <h3>You are about to modify this room:</h3>
+    <br>
+
+    <div class="container-fluid">
         <table class="table">
             <thead class="thead-dark">
                 <tr style="text-align: center">
-                    <th scope="col">#</th>
                     <th scope="col">Room name</th>
                     <th scope="col">Capacity</th>
-                    <th scope="col">Availability</th>
                     <th scope="col">Projector</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-                {% for room in rooms %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
                     <td>{{ room.name }}</td>
                     <td style="text-align: center">{{ room.capacity }}</td>
-                    <td style="text-align: center">Unknown</td>
                         {% if room.is_projector %}
                     <td class="col-2" style="color:green; text-align: center">&#10004;</td>
                         {% else %}
                     <td class="col-2" style="color:red; text-align: center">&#10008;</td>
                         {% endif %}
-                    <td><a href="room/edit/{{ room.id }}/">Edit</a></td>
-                    <td><a href="room/del/{{ room.id }}/">Delete</a></td>
-                    <td><a href="room/mk_res/{{ room.id }}/">Make reservation</a></td>
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
     </div>
 
+    <br>
+    <h3>Please enter modified features of the room:</h3>
+    <br>
+
+  <form action="" method="POST">
+  {% csrf_token %}
+  <br>
+      <div class="form-group">
+  <label for="name">Room name:</label>
+  <input type="text" id="name" name="name">
+      </div><br>
+      <div>
+  <label for="room_capacity">Room capacity:</label>
+  <input type="number" id="room_capacity" name="room_capacity">
+          </div>
+      <div><br>
+  <label for="is_projector">Projector available</label>
+  <input type="checkbox" id="is_projector" name="is_projector">
+      </div><br>
+      <div>
+  <input type="submit" class="btn btn-primary" value="Modify">
+    </div>
+</form>
 
 {% endblock %}
