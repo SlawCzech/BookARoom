@@ -9,57 +9,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Lecture Room Booking System</title>
     <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}" type="text/css" media="screen">
-    <link rel="stylesheet" href="{% static 'styles/font-awesome.min.css' %}">
-
     <script src="{% static 'scripts/bootstrap.min.js' %}" async defer></script>
 
-<style>
-    .footer {
-        text-align: center;
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        color: #bacbe6;
-    }
-
-    a:link, a:visited {
-        text-decoration: none;
-        color: #bacbe6;
-    }
-
-    a:hover {
-        color: #0a53be;
-    }
-
-</style>
+    {% include 'partials/styles.html' %}
 
 </head>
 
 <body>
 
 <!-- NAVIGATION BAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand">Book-A-Room!</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home:all_rooms' %}">Room list</a>
-        </li>
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home:add_view' %}">Add room</a>
-        </li>
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home:search' %}">Search for a room</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
+{% include 'partials/nav.html' %}
 
 <!-- CONTAINERS -->
 

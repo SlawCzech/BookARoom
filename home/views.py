@@ -6,6 +6,10 @@ import datetime
 
 
 class AddRoom(View):
+    """
+    Adding a room to database.
+    Checks if the room already exists and controls for proper input data.
+    """
     def get(self, request):
         return render(request, 'home/add_room.html')
 
@@ -28,6 +32,9 @@ class AddRoom(View):
         return render(request, 'home/add_room.html')
 
 class AllRooms(View):
+    """
+    Produces a view of all rooms.
+    """
     def get(self, request):
         rooms = Room.objects.all().values()
         for room in rooms:
@@ -38,6 +45,11 @@ class AllRooms(View):
         return render(request, 'home/all_rooms.html', {'rooms': rooms})
 
 class DeleteRoom(View):
+    """
+    Deletes room from database.
+
+    :param int room_id: id of the room
+    """
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         room.delete()
@@ -45,6 +57,12 @@ class DeleteRoom(View):
         return render(request, 'home/all_rooms.html', {'rooms': rooms})
 
 class ModifyRoom(View):
+    """
+    Allows for modifying rooms (name, capacity, projector).
+    Controls for proper input data.
+
+    :param int room_id: id of the room
+    """
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         return render(request, 'home/edit.html', {'room': room})
@@ -71,6 +89,12 @@ class ModifyRoom(View):
         return redirect('home:all_rooms')
 
 class BookRoom(View):
+    """
+    Allows for making reservations.
+    Checks if the room is already booked and if the requested date is in the future.
+
+    :param int room_id: id of the room
+    """
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         reservations = Bookings.objects.filter(room_id_id=room_id).filter(
@@ -95,12 +119,21 @@ class BookRoom(View):
         return redirect('home:all_rooms')
 
 class RoomDetails(View):
+    """
+    Produces detailed view for a particular room (features and reservations).
+
+    :param int room_id: id of the room
+    """
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         reservations = Bookings.objects.filter(room_id_id=room_id).filter(booking_date__gte=str(datetime.date.today())).order_by('booking_date')
         return render(request, 'home/room_details.html', context={'room': room, 'reservations': reservations})
 
 class Search(View):
+    """
+    Search engine for finding rooms with minimum expected capacity and projector availability.
+
+    """
     def get(self, request):
         return render(request, 'home/search.html')
 
