@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+    <h3>Search</h3>
+
+<div class="card">
+
+  <div class="card-body">
+
+    <form action="" method="GET">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="capacity">Minimum capacity</label>
+        <input type="number" step="1" class="form-control" id="capacity" placeholder="10" name="capacity">
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="projector" id="projector">
+        <label class="form-check-label" for="projector">Projector</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</div>
+
+<div class="container-fluid">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr style="text-align: center">
+                    <th scope="col">#</th>
+                    <th scope="col">Room name</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col">Availability</th>
+                    <th scope="col">Projector</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ room.name }}</td>
+                    <td style="text-align: center"><a href="room/{{ room.id }}/">&#128065;</a></td>
+                    <td style="text-align: center">{{ room.room_capacity }}</td>
+                        {% if booked %}
+                    <td style="text-align: center">Booked</td>
+                        {% else %}
+                    <td style="text-align: center">Available</td>
+                        {% endif %}
+                        {% if room.is_projector %}
+                    <td class="col-2" style="color:green; text-align: center">&#10004;</td>
+                        {% else %}
+                    <td class="col-2" style="color:red; text-align: center">&#10008;</td>
+                        {% endif %}
+                    <td><a href="room/mk_res/{{ room.id }}/">Make reservation</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

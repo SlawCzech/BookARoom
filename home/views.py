@@ -100,3 +100,31 @@ class RoomDetails(View):
         reservations = Bookings.objects.filter(room_id_id=room_id).filter(booking_date__gte=str(datetime.date.today())).order_by('booking_date')
         return render(request, 'home/room_details.html', context={'room': room, 'reservations': reservations})
 
+class Search(View):
+    def get(self, request):
+        return render(request, 'home/search.html')
+
+    def post(self, request):
+        name = request.POST.get("name")
+        room_capacity = int(request.POST.get("room_capacity"))
+        if not room_capacity or room_capacity < 1:
+            return HttpResponse('Please indicate real room capacity')
+        is_projector = request.POST.get("is_projector")
+        if is_projector == 'on':
+            is_projector = True
+        else:
+            is_projector = False
+
+        rooms = Room.objects.all().values()
+        if is_projector:
+            rooms = rooms.filter(is_projector=is_projector)
+        if room_capacity:
+            rooms = rooms.filter(room_capacity__gte=room_capacity)
+
+        for room in rooms:
+            reservations = Bookings.objects.filter(name=name).filter(
+                booking_date__gte=str(datetime.date.today()))
+            room.reserved = str(datetime.date.today()) in reservations
+
+        return render(request, 'home/search.html', context={'rooms': rooms})
+
