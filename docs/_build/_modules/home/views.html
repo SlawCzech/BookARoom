@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>home.views &mdash; BookARoom 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            BookARoom
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">BookARoom</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BookARoom</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">home.views</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for home.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.views</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">home.models</span> <span class="kn">import</span> <span class="n">Room</span><span class="p">,</span> <span class="n">Bookings</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+
+<div class="viewcode-block" id="AddRoom"><a class="viewcode-back" href="../../home.html#home.views.AddRoom">[docs]</a><span class="k">class</span> <span class="nc">AddRoom</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adding a room to database.</span>
+<span class="sd">    Checks if the room already exists and controls for proper input data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AddRoom.get"><a class="viewcode-back" href="../../home.html#home.views.AddRoom.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/add_room.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AddRoom.post"><a class="viewcode-back" href="../../home.html#home.views.AddRoom.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;Room name was empty&#39;</span><span class="p">)</span>
+        <span class="n">room_capacity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;room_capacity&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">room_capacity</span> <span class="ow">or</span> <span class="n">room_capacity</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;Please indicate room capacity&#39;</span><span class="p">)</span>
+        <span class="n">is_projector</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_projector&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_projector</span> <span class="o">==</span> <span class="s1">&#39;on&#39;</span><span class="p">:</span>
+            <span class="n">is_projector</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_projector</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;This room is already in database&#39;</span><span class="p">)</span>
+
+        <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">room_capacity</span><span class="p">,</span> <span class="n">is_projector</span><span class="o">=</span><span class="n">is_projector</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/add_room.html&#39;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="AllRooms"><a class="viewcode-back" href="../../home.html#home.views.AllRooms">[docs]</a><span class="k">class</span> <span class="nc">AllRooms</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Produces a view of all rooms.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AllRooms.get"><a class="viewcode-back" href="../../home.html#home.views.AllRooms.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">rooms</span><span class="p">:</span>
+            <span class="n">booked</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">reservations</span> <span class="o">=</span> <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_id_id</span><span class="o">=</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+            <span class="n">reservation_dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">booking_date</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">reservations</span><span class="p">]</span>
+            <span class="n">booked</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="ow">in</span> <span class="n">reservation_dates</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/all_rooms.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rooms&#39;</span><span class="p">:</span> <span class="n">rooms</span><span class="p">})</span></div></div>
+
+<div class="viewcode-block" id="DeleteRoom"><a class="viewcode-back" href="../../home.html#home.views.DeleteRoom">[docs]</a><span class="k">class</span> <span class="nc">DeleteRoom</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes room from database.</span>
+
+<span class="sd">    :param int room_id: id of the room</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DeleteRoom.get"><a class="viewcode-back" href="../../home.html#home.views.DeleteRoom.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/all_rooms.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rooms&#39;</span><span class="p">:</span> <span class="n">rooms</span><span class="p">})</span></div></div>
+
+<div class="viewcode-block" id="ModifyRoom"><a class="viewcode-back" href="../../home.html#home.views.ModifyRoom">[docs]</a><span class="k">class</span> <span class="nc">ModifyRoom</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allows for modifying rooms (name, capacity, projector).</span>
+<span class="sd">    Controls for proper input data.</span>
+
+<span class="sd">    :param int room_id: id of the room</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ModifyRoom.get"><a class="viewcode-back" href="../../home.html#home.views.ModifyRoom.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/edit.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">room</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="ModifyRoom.post"><a class="viewcode-back" href="../../home.html#home.views.ModifyRoom.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;Room name was empty&#39;</span><span class="p">)</span>
+        <span class="n">room_capacity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;room_capacity&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">room_capacity</span> <span class="ow">or</span> <span class="n">room_capacity</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;Please indicate room capacity&#39;</span><span class="p">)</span>
+        <span class="n">is_projector</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_projector&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_projector</span> <span class="o">==</span> <span class="s1">&#39;on&#39;</span><span class="p">:</span>
+            <span class="n">is_projector</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_projector</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">room</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="n">room_capacity</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">is_projector</span> <span class="o">=</span> <span class="n">is_projector</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;home:all_rooms&#39;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="BookRoom"><a class="viewcode-back" href="../../home.html#home.views.BookRoom">[docs]</a><span class="k">class</span> <span class="nc">BookRoom</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allows for making reservations.</span>
+<span class="sd">    Checks if the room is already booked and if the requested date is in the future.</span>
+
+<span class="sd">    :param int room_id: id of the room</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BookRoom.get"><a class="viewcode-back" href="../../home.html#home.views.BookRoom.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+        <span class="n">reservations</span> <span class="o">=</span> <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_id_id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">booking_date__gte</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;booking_date&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/booking.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">room</span><span class="p">,</span> <span class="s1">&#39;reservations&#39;</span><span class="p">:</span> <span class="n">reservations</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="BookRoom.post"><a class="viewcode-back" href="../../home.html#home.views.BookRoom.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">)</span>
+
+        <span class="n">reservations</span> <span class="o">=</span> <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_id_id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">booking_date__gte</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;booking_date&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_id_id</span><span class="o">=</span><span class="n">room</span><span class="p">,</span> <span class="n">booking_date</span><span class="o">=</span><span class="n">date</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;This room is already booked for this date.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">date</span> <span class="o">&lt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Please indicate future date for your reservation&quot;</span><span class="p">)</span>
+
+        <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">room_id_id</span><span class="o">=</span><span class="n">room</span><span class="p">,</span> <span class="n">booking_date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">commentary</span><span class="o">=</span><span class="n">comment</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;home:all_rooms&#39;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="RoomDetails"><a class="viewcode-back" href="../../home.html#home.views.RoomDetails">[docs]</a><span class="k">class</span> <span class="nc">RoomDetails</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Produces detailed view for a particular room (features and reservations).</span>
+
+<span class="sd">    :param int room_id: id of the room</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RoomDetails.get"><a class="viewcode-back" href="../../home.html#home.views.RoomDetails.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+        <span class="n">reservations</span> <span class="o">=</span> <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_id_id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">booking_date__gte</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;booking_date&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/room_details.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">room</span><span class="p">,</span> <span class="s1">&#39;reservations&#39;</span><span class="p">:</span> <span class="n">reservations</span><span class="p">})</span></div></div>
+
+<div class="viewcode-block" id="Search"><a class="viewcode-back" href="../../home.html#home.views.Search">[docs]</a><span class="k">class</span> <span class="nc">Search</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search engine for finding rooms with minimum expected capacity and projector availability.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Search.get"><a class="viewcode-back" href="../../home.html#home.views.Search.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/search.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Search.post"><a class="viewcode-back" href="../../home.html#home.views.Search.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="n">room_capacity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;room_capacity&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">room_capacity</span> <span class="ow">or</span> <span class="n">room_capacity</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;Please indicate real room capacity&#39;</span><span class="p">)</span>
+        <span class="n">is_projector</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_projector&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_projector</span> <span class="o">==</span> <span class="s1">&#39;on&#39;</span><span class="p">:</span>
+            <span class="n">is_projector</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_projector</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">is_projector</span><span class="p">:</span>
+            <span class="n">rooms</span> <span class="o">=</span> <span class="n">rooms</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">is_projector</span><span class="o">=</span><span class="n">is_projector</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">room_capacity</span><span class="p">:</span>
+            <span class="n">rooms</span> <span class="o">=</span> <span class="n">rooms</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_capacity__gte</span><span class="o">=</span><span class="n">room_capacity</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">rooms</span><span class="p">:</span>
+            <span class="n">reservations</span> <span class="o">=</span> <span class="n">Bookings</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">booking_date__gte</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()))</span>
+            <span class="n">room</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span> <span class="ow">in</span> <span class="n">reservations</span>
+
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;home/search.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;rooms&#39;</span><span class="p">:</span> <span class="n">rooms</span><span class="p">})</span></div></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, saek.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
